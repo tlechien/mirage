@@ -2,351 +2,363 @@
 This module contains some data structures used by the upper application layers of Bluetooth and Bluetooth Low Energy, and it provides some helpers in order to easily use them.
 '''
 
+
 class PairingMethods:
-	'''
-	This class provides some helpers in order to manipulate the Security Manager protocol.
-	'''
-	JUST_WORKS = 1
-	PASSKEY_ENTRY = 2
-	NUMERIC_COMPARISON = 3
+    '''
+    This class provides some helpers in order to manipulate the Security Manager protocol.
+    '''
+    JUST_WORKS = 1
+    PASSKEY_ENTRY = 2
+    NUMERIC_COMPARISON = 3
 
-	_PAIRING_METHODS = {
-		"DisplayOnly":
-				{
-					"DisplayOnly":(JUST_WORKS,JUST_WORKS),
-					"DisplayYesNo":(JUST_WORKS,JUST_WORKS),
-					"KeyboardOnly":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"NoInputNoOutput":(JUST_WORKS,JUST_WORKS),
-					"KeyboardDisplay":(PASSKEY_ENTRY,PASSKEY_ENTRY)
-				},
-		"DisplayYesNo":
-				{
-					"DisplayOnly":(JUST_WORKS,JUST_WORKS),
-					"DisplayYesNo":(JUST_WORKS,NUMERIC_COMPARISON),
-					"KeyboardOnly":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"NoInputNoOutput":(JUST_WORKS,JUST_WORKS),
-					"KeyboardDisplay":(PASSKEY_ENTRY,NUMERIC_COMPARISON)
-				},
-		"KeyboardOnly":
-				{
-					"DisplayOnly":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"DisplayYesNo":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"KeyboardOnly":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"NoInputNoOutput":(JUST_WORKS,JUST_WORKS),
-					"KeyboardDisplay":(PASSKEY_ENTRY,PASSKEY_ENTRY)
-				},
-		"NoInputNoOutput":
-				{
-					"DisplayOnly":(JUST_WORKS,JUST_WORKS),
-					"DisplayYesNo":(JUST_WORKS,JUST_WORKS),
-					"KeyboardOnly":(JUST_WORKS,JUST_WORKS),
-					"NoInputNoOutput":(JUST_WORKS,JUST_WORKS),
-					"KeyboardDisplay":(JUST_WORKS,JUST_WORKS)
-				},
-		"KeyboardDisplay":
-				{
-					"DisplayOnly":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"DisplayYesNo":(PASSKEY_ENTRY,NUMERIC_COMPARISON),
-					"KeyboardOnly":(PASSKEY_ENTRY,PASSKEY_ENTRY),
-					"NoInputNoOutput":(JUST_WORKS,JUST_WORKS),
-					"KeyboardDisplay":(PASSKEY_ENTRY,NUMERIC_COMPARISON)
-				}
-	}
-	@classmethod
-	def getPairingMethod(cls,secureConnections=False,initiatorInputOutputCapability="NoInputNoOutput",responderInputOutputCapability="NoInputNoOutput"):
-		'''
-		This method allows to select the right pairing method according to the initiator and responder Input Output Capability.
+    _PAIRING_METHODS = {
+        "DisplayOnly":
+        {
+            "DisplayOnly": (JUST_WORKS, JUST_WORKS),
+            "DisplayYesNo": (JUST_WORKS, JUST_WORKS),
+            "KeyboardOnly": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "NoInputNoOutput": (JUST_WORKS, JUST_WORKS),
+            "KeyboardDisplay": (PASSKEY_ENTRY, PASSKEY_ENTRY)
+        },
+            "DisplayYesNo":
+        {
+            "DisplayOnly": (JUST_WORKS, JUST_WORKS),
+            "DisplayYesNo": (JUST_WORKS, NUMERIC_COMPARISON),
+            "KeyboardOnly": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "NoInputNoOutput": (JUST_WORKS, JUST_WORKS),
+            "KeyboardDisplay": (PASSKEY_ENTRY, NUMERIC_COMPARISON)
+        },
+            "KeyboardOnly":
+        {
+            "DisplayOnly": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "DisplayYesNo": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "KeyboardOnly": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "NoInputNoOutput": (JUST_WORKS, JUST_WORKS),
+            "KeyboardDisplay": (PASSKEY_ENTRY, PASSKEY_ENTRY)
+        },
+            "NoInputNoOutput":
+        {
+            "DisplayOnly": (JUST_WORKS, JUST_WORKS),
+            "DisplayYesNo": (JUST_WORKS, JUST_WORKS),
+            "KeyboardOnly": (JUST_WORKS, JUST_WORKS),
+            "NoInputNoOutput": (JUST_WORKS, JUST_WORKS),
+            "KeyboardDisplay": (JUST_WORKS, JUST_WORKS)
+        },
+            "KeyboardDisplay":
+        {
+            "DisplayOnly": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "DisplayYesNo": (PASSKEY_ENTRY, NUMERIC_COMPARISON),
+            "KeyboardOnly": (PASSKEY_ENTRY, PASSKEY_ENTRY),
+            "NoInputNoOutput": (JUST_WORKS, JUST_WORKS),
+            "KeyboardDisplay": (PASSKEY_ENTRY, NUMERIC_COMPARISON)
+        }
+    }
 
-		:param secureConnections: boolean indicating if the secure connections are in use
-		:type secureConnections: bool
-		:param initiatorInputOutputCapability: string indicating the initiator Input Output Capability
-		:type initiatorInputOutputCapability: str
-		:param responderInputOutputCapability: string indicating the responder Input Output Capability
-		:type initiatorInputOutputCapability: str
-		:return: integer indicating the pairing method selected
-		:rtype: int
+    @classmethod
+    def getPairingMethod(cls, secureConnections=False, initiatorInputOutputCapability="NoInputNoOutput", responderInputOutputCapability="NoInputNoOutput"):
+        '''
+        This method allows to select the right pairing method according to the initiator and responder Input Output Capability.
 
-		.. note::
-			The possible values for InputOutputCapability parameters are :
+        :param secureConnections: boolean indicating if the secure connections are in use
+        :type secureConnections: bool
+        :param initiatorInputOutputCapability: string indicating the initiator Input Output Capability
+        :type initiatorInputOutputCapability: str
+        :param responderInputOutputCapability: string indicating the responder Input Output Capability
+        :type initiatorInputOutputCapability: str
+        :return: integer indicating the pairing method selected
+        :rtype: int
 
-			  * "DisplayOnly"
-			  * "DisplayYesNo"
-			  * "KeyboardOnly"
-			  * "NoInputNoOutput"
-			  * "KeyboardDisplay"
+        .. note::
+                The possible values for InputOutputCapability parameters are :
 
-		
-		:Example:
-			>>> PairingMethods.getPairingMethod(
-			... secureConnections=False,
-			... initiatorInputOutputCapability="NoInputNoOutput",
-			... responderInputOutputCapability="NoInputNoOutput")
-			1
-			>>> PairingMethods.getPairingMethod(
-			... secureConnections=True,
-			... initiatorInputOutputCapability="DisplayOnly",
-			... responderInputOutputCapability="KeyboardOnly")
-			2
+                  * "DisplayOnly"
+                  * "DisplayYesNo"
+                  * "KeyboardOnly"
+                  * "NoInputNoOutput"
+                  * "KeyboardDisplay"
 
-		'''
-		methods = cls._PAIRING_METHODS[initiatorInputOutputCapability][responderInputOutputCapability]
-		return methods[1] if secureConnections else methods[0]
+
+        :Example:
+                >>> PairingMethods.getPairingMethod(
+                ... secureConnections=False,
+                ... initiatorInputOutputCapability="NoInputNoOutput",
+                ... responderInputOutputCapability="NoInputNoOutput")
+                1
+                >>> PairingMethods.getPairingMethod(
+                ... secureConnections=True,
+                ... initiatorInputOutputCapability="DisplayOnly",
+                ... responderInputOutputCapability="KeyboardOnly")
+                2
+
+        '''
+        methods = cls._PAIRING_METHODS[initiatorInputOutputCapability][responderInputOutputCapability]
+        return methods[1] if secureConnections else methods[0]
+
 
 def _int2bin(s):
-    b = str(s) if s<=1 else bin(s>>1)[2:] + str(s&1)
+    b = str(s) if s <= 1 else bin(s >> 1)[2:] + str(s & 1)
     return (8-len(b))*"0"+b
 
+
 class AssignedNumbers:
-	'''
-	This class provides some helpers to get some specific values used by the Bluetooth and Bluetooth Low Energy protocols.
-	'''
-	@classmethod
-	def getStringsbyFlags(cls,flags):
-		'''
-		This class method converts some flags contained in BLE Advertisements into a list of human readable strings.
-		
-		:param flags: flags to convert, separated by "+"
-		:type flags: str
-		:return: list of human readable strings
-		:rtype: list of str
+    '''
+    This class provides some helpers to get some specific values used by the Bluetooth and Bluetooth Low Energy protocols.
+    '''
+    @classmethod
+    def getStringsbyFlags(cls, flags):
+        '''
+        This class method converts some flags contained in BLE Advertisements into a list of human readable strings.
 
-		:Example:
+        :param flags: flags to convert, separated by "+"
+        :type flags: str
+        :return: list of human readable strings
+        :rtype: list of str
 
-			>>> AssignedNumbers.getStringsbyFlags("limited_disc_mode+simul_le_br_edr_host")
-			['LE Limited Discoverable Mode', 'Simultaneous LE and BR/EDR, Host']
-		
-		'''
-		return [ADV_FLAGS[flag] for flag in str(flags).split('+')]
+        :Example:
 
-	@classmethod
-	def getCompanyByNumber(cls,number):
-		'''
-		This class method converts a company ID into an human readable name.
+                >>> AssignedNumbers.getStringsbyFlags("limited_disc_mode+simul_le_br_edr_host")
+                ['LE Limited Discoverable Mode', 'Simultaneous LE and BR/EDR, Host']
 
-		:param number: integer indicating the company ID
-		:type number: int
-		:return: name of company
-		:rtype: str
+        '''
+        return [ADV_FLAGS[flag] for flag in str(flags).split('+')]
 
-		:Example:
-		
-			>>> AssignedNumbers.getCompanyByNumber(12)
-			'Digianswer A/S'
-			>>> AssignedNumbers.getCompanyByNumber(125)
-			'Seers Technology Co., Ltd.'
+    @classmethod
+    def getCompanyByNumber(cls, number):
+        '''
+        This class method converts a company ID into an human readable name.
 
-		'''
-		for k,v in COMPANY_ID.items():
-			if int(k) == int(number):
-				return v
-		return None
-	@classmethod
-	def getNumberByName(cls,name):
-		'''
-		This class method converts a name into the corresponding assigned number.
+        :param number: integer indicating the company ID
+        :type number: int
+        :return: name of company
+        :rtype: str
 
-		:param name: name to convert
-		:type name: str
-		:return: assigned number
-		:rtype: int
+        :Example:
 
-		:Example:
+                >>> AssignedNumbers.getCompanyByNumber(12)
+                'Digianswer A/S'
+                >>> AssignedNumbers.getCompanyByNumber(125)
+                'Seers Technology Co., Ltd.'
 
-			>>> AssignedNumbers.getNumberByName("Generic Access")
-			6144
-			>>> AssignedNumbers.getNumberByName("Battery Service")
-			6159
+        '''
+        for k, v in COMPANY_ID.items():
+            if int(k) == int(number):
+                return v
+        return None
 
-		'''
-		for k,v in ASSIGNED_NUMBERS.items():
-			if v['name']==name:
-				return int(k)
-		return None
-	@classmethod
-	def getUTIByName(cls,name):
-		'''
-		This class method converts a name into the corresponding Uniform Type Identifier.
+    @classmethod
+    def getNumberByName(cls, name):
+        '''
+        This class method converts a name into the corresponding assigned number.
 
-		:param name: name to convert
-		:type name: str
-		:return: Uniform Type Identifier
-		:rtype: str
+        :param name: name to convert
+        :type name: str
+        :return: assigned number
+        :rtype: int
 
-		:Example:
+        :Example:
 
-			>>> AssignedNumbers.getUTIByName("Generic Access")
-			'org.bluetooth.service.generic_access'
-			>>> AssignedNumbers.getUTIByName("Battery Service")
-			'org.bluetooth.service.battery_service'
+                >>> AssignedNumbers.getNumberByName("Generic Access")
+                6144
+                >>> AssignedNumbers.getNumberByName("Battery Service")
+                6159
 
-		'''
-		for k,v in ASSIGNED_NUMBERS.items():
-			if v['name']==name:
-				return v['uniform_type_identifier']
-		return None
-	@classmethod
-	def getNameByNumber(cls,number):
-		'''
-		This class method converts an assigned number into the corresponding name.
+        '''
+        for k, v in ASSIGNED_NUMBERS.items():
+            if v['name'] == name:
+                return int(k)
+        return None
 
-		:param number: assigned number to convert
-		:type number: int
-		:return: name
-		:rtype: str
+    @classmethod
+    def getUTIByName(cls, name):
+        '''
+        This class method converts a name into the corresponding Uniform Type Identifier.
 
-		:Example:
+        :param name: name to convert
+        :type name: str
+        :return: Uniform Type Identifier
+        :rtype: str
 
-			>>> AssignedNumbers.getNameByNumber(6144)
-			'Generic Access'
-			>>> AssignedNumbers.getNameByNumber(6159)
-			'Battery Service'
+        :Example:
 
-		'''
-		for k,v in ASSIGNED_NUMBERS.items():
-			if int(k)==number:
-				return v['name']
-		return None
-	@classmethod
-	def getUTIByNumber(cls,number):
-		'''
-		This class method converts an assigned number into the corresponding Uniform Type Identifier.
+                >>> AssignedNumbers.getUTIByName("Generic Access")
+                'org.bluetooth.service.generic_access'
+                >>> AssignedNumbers.getUTIByName("Battery Service")
+                'org.bluetooth.service.battery_service'
 
-		:param number: assigned number to convert
-		:type number: int
-		:return: Uniform Type Identifier
-		:rtype: str
+        '''
+        for k, v in ASSIGNED_NUMBERS.items():
+            if v['name'] == name:
+                return v['uniform_type_identifier']
+        return None
 
-		:Example:
+    @classmethod
+    def getNameByNumber(cls, number):
+        '''
+        This class method converts an assigned number into the corresponding name.
 
-			>>> AssignedNumbers.getUTIByNumber(6144)
-			'org.bluetooth.service.generic_access'
-			>>> AssignedNumbers.getUTIByNumber(6159)
-			'org.bluetooth.service.battery_service'
+        :param number: assigned number to convert
+        :type number: int
+        :return: name
+        :rtype: str
 
-		'''
-		for k,v in ASSIGNED_NUMBERS.items():
-			if int(k)==number:
-				return v['uniform_type_identifier']
-		return None
-	@classmethod
-	def getNumberByUTI(cls,uti):
-		'''
-		This class method converts an Uniform Type Identifier into the corresponding assigned number.
+        :Example:
 
-		:param uti:  Uniform Type Identifier to convert
-		:type uti: str
-		:return: assigned number
-		:rtype: int
+                >>> AssignedNumbers.getNameByNumber(6144)
+                'Generic Access'
+                >>> AssignedNumbers.getNameByNumber(6159)
+                'Battery Service'
 
-		:Example:
+        '''
+        for k, v in ASSIGNED_NUMBERS.items():
+            if int(k) == number:
+                return v['name']
+        return None
 
-			>>> AssignedNumbers.getNumberByUTI('org.bluetooth.service.generic_access')
-			6144
-			>>> AssignedNumbers.getNumberByUTI('org.bluetooth.service.battery_service')
-			6159
+    @classmethod
+    def getUTIByNumber(cls, number):
+        '''
+        This class method converts an assigned number into the corresponding Uniform Type Identifier.
 
-		'''
-		for k,v in ASSIGNED_NUMBERS.items():
-			if v['uniform_type_identifier']==uti:
-				return int(k)
-		return None
-	@classmethod
-	def getNameByUTI(cls,uti):
-		'''
-		This class method converts an Uniform Type Identifier into the corresponding name.
+        :param number: assigned number to convert
+        :type number: int
+        :return: Uniform Type Identifier
+        :rtype: str
 
-		:param uti:  Uniform Type Identifier to convert
-		:type uti: str
-		:return: name
-		:rtype: str
+        :Example:
 
-		:Example:
+                >>> AssignedNumbers.getUTIByNumber(6144)
+                'org.bluetooth.service.generic_access'
+                >>> AssignedNumbers.getUTIByNumber(6159)
+                'org.bluetooth.service.battery_service'
 
-			>>> AssignedNumbers.getNameByUTI('org.bluetooth.service.generic_access')
-			'Generic Access'
-			>>> AssignedNumbers.getNameByUTI('org.bluetooth.service.battery_service')
-			'Battery Service'
+        '''
+        for k, v in ASSIGNED_NUMBERS.items():
+            if int(k) == number:
+                return v['uniform_type_identifier']
+        return None
 
-		'''
-		for k,v in ASSIGNED_NUMBERS.items():
-			if v['uniform_type_identifier']==uti:
-				return v['name']
-		return None
-	@classmethod
-	def getPermissionsByNumber(cls,number):
-		'''
-		This class method converts an ATT permissions number into an human readable list of permissions.
-		
-		:param number: ATT permissions number
-		:type number: int
-		:return: human readable list of permissions
-		:rtype: list of str
+    @classmethod
+    def getNumberByUTI(cls, uti):
+        '''
+        This class method converts an Uniform Type Identifier into the corresponding assigned number.
 
-		:Example:
-	
-			>>> AssignedNumbers.getPermissionsByNumber(5)
-			['Write Without Response', 'Broadcast']
-			>>> AssignedNumbers.getPermissionsByNumber(1)
-			['Broadcast']
-			>>> AssignedNumbers.getPermissionsByNumber(6)
-			['Write Without Response', 'Read']
+        :param uti:  Uniform Type Identifier to convert
+        :type uti: str
+        :return: assigned number
+        :rtype: int
 
-		'''
-		permissions,flag = [],_int2bin(number)
-		for i in range(8):
-			if flag[i]=="1":
-				permissions.append(PERMISSIONS[i])
-		return permissions
+        :Example:
 
-	@classmethod
-	def getNumberByPermissions(cls,permissions):
-		'''
-		This class method converts an human readable list of ATT permissions into an ATT permissions number.
-		
-		:param permissions: human readable list of permissions 
-		:type permissions: list of str
-		:return: ATT permissions number
-		:rtype: int
+                >>> AssignedNumbers.getNumberByUTI('org.bluetooth.service.generic_access')
+                6144
+                >>> AssignedNumbers.getNumberByUTI('org.bluetooth.service.battery_service')
+                6159
 
-		:Example:
-	
-			>>> AssignedNumbers.getNumberByPermissions(['Write Without Response', 'Broadcast'])
-			5
-			>>> AssignedNumbers.getNumberByPermissions(['Broadcast'])
-			1
-			>>> AssignedNumbers.getNumberByPermissions(['Write Without Response', 'Read'])
-			6
+        '''
+        for k, v in ASSIGNED_NUMBERS.items():
+            if v['uniform_type_identifier'] == uti:
+                return int(k)
+        return None
+
+    @classmethod
+    def getNameByUTI(cls, uti):
+        '''
+        This class method converts an Uniform Type Identifier into the corresponding name.
+
+        :param uti:  Uniform Type Identifier to convert
+        :type uti: str
+        :return: name
+        :rtype: str
+
+        :Example:
+
+                >>> AssignedNumbers.getNameByUTI('org.bluetooth.service.generic_access')
+                'Generic Access'
+                >>> AssignedNumbers.getNameByUTI('org.bluetooth.service.battery_service')
+                'Battery Service'
+
+        '''
+        for k, v in ASSIGNED_NUMBERS.items():
+            if v['uniform_type_identifier'] == uti:
+                return v['name']
+        return None
+
+    @classmethod
+    def getPermissionsByNumber(cls, number):
+        '''
+        This class method converts an ATT permissions number into an human readable list of permissions.
+
+        :param number: ATT permissions number
+        :type number: int
+        :return: human readable list of permissions
+        :rtype: list of str
+
+        :Example:
+
+                >>> AssignedNumbers.getPermissionsByNumber(5)
+                ['Write Without Response', 'Broadcast']
+                >>> AssignedNumbers.getPermissionsByNumber(1)
+                ['Broadcast']
+                >>> AssignedNumbers.getPermissionsByNumber(6)
+                ['Write Without Response', 'Read']
+
+        '''
+        permissions, flag = [], _int2bin(number)
+        for i in range(8):
+            if flag[i] == "1":
+                permissions.append(PERMISSIONS[i])
+        return permissions
+
+    @classmethod
+    def getNumberByPermissions(cls, permissions):
+        '''
+        This class method converts an human readable list of ATT permissions into an ATT permissions number.
+
+        :param permissions: human readable list of permissions 
+        :type permissions: list of str
+        :return: ATT permissions number
+        :rtype: int
+
+        :Example:
+
+                >>> AssignedNumbers.getNumberByPermissions(['Write Without Response', 'Broadcast'])
+                5
+                >>> AssignedNumbers.getNumberByPermissions(['Broadcast'])
+                1
+                >>> AssignedNumbers.getNumberByPermissions(['Write Without Response', 'Read'])
+                6
 
 
-		'''
-		flag = list("00000000")
-		for permission in permissions:
-			try:
-				index = PERMISSIONS.index(permission)
-				flag[index] = "1"
-			except:
-				continue
-		return int("".join(flag),2)
+        '''
+        flag = list("00000000")
+        for permission in permissions:
+            try:
+                index = PERMISSIONS.index(permission)
+                flag[index] = "1"
+            except:
+                continue
+        return int("".join(flag), 2)
+
 
 ADV_FLAGS = {
-	"limited_disc_mode":"LE Limited Discoverable Mode" ,
- 	"general_disc_mode":"LE General Discoverable Mode" ,
-  	"br_edr_not_supported":"BR/EDR not supported" ,
-   	"simul_le_br_edr_ctrl":"Simultaneous LE and BR/EDR, Controller",
-	"simul_le_br_edr_host":"Simultaneous LE and BR/EDR, Host",
- 	"reserved":"Reserved"
+    "limited_disc_mode": "LE Limited Discoverable Mode",
+    "general_disc_mode": "LE General Discoverable Mode",
+    "br_edr_not_supported": "BR/EDR not supported",
+    "simul_le_br_edr_ctrl": "Simultaneous LE and BR/EDR, Controller",
+    "simul_le_br_edr_host": "Simultaneous LE and BR/EDR, Host",
+    "reserved": "Reserved"
 }
 
 PERMISSIONS = [
-		 	"Extended Properties",
-			"Authenticated Signed Writes",
-	      		"Indicate",
-	    		"Notify",
-	  		"Write",
-	  		"Write Without Response",
-			"Read",
-	    		"Broadcast"
-    		]
+    "Extended Properties",
+    "Authenticated Signed Writes",
+    "Indicate",
+    "Notify",
+    "Write",
+    "Write Without Response",
+    "Read",
+    "Broadcast"
+]
 
 ASSIGNED_NUMBERS = {
     "6144": {
@@ -3039,4 +3051,3 @@ COMPANY_ID = {
     "1588": "Fanstel Corp",
     "1589": "Crookwood"
 }
-

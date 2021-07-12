@@ -4,7 +4,7 @@ from os.path import expanduser,exists
 def generateModulesDictionary(moduleDir, moduleUserDir):
 	'''
 	This function generates a dictionary of Mirage modules, by including files stored in ``moduleDir`` and ``moduleUserDir``.
-	
+
 	:param moduleDir: path of Mirage's modules directory
 	:type moduleDir: str
 	:param moduleUserDir: path of Mirage's user modules directory
@@ -18,10 +18,10 @@ def generateModulesDictionary(moduleDir, moduleUserDir):
 	for module in os.listdir(moduleDir):
 		if os.path.isfile(moduleDir+"/"+module) and module[-3:] == ".py" and module != "__init__.py":
 			modules[module[:-3]] = imp.load_source(module[:-3],moduleDir + "/"+module)
-		
-	for module in os.listdir(moduleUserDir):
-		if os.path.isfile(moduleUserDir+"/"+module) and module[-3:] == ".py" and module != "__init__.py":
-			modules[module[:-3]] = imp.load_source(module[:-3],moduleUserDir + "/"+module)
+
+	for module in os.listdir(moduleDir):
+		if os.path.isfile(moduleDir+"/"+module) and module[-3:] == ".py" and module != "__init__.py":
+			modules[module[:-3]] = imp.load_source(module[:-3],moduleDir + "/"+module)
 
 	return modules
 
@@ -29,7 +29,7 @@ def generateModulesDictionary(moduleDir, moduleUserDir):
 def generateScenariosDictionary(scenariosDir, scenariosUserDir):
 	'''
 	This function generates a dictionary of Mirage scenarios, by including files stored in ``scenariosDir`` and ``scenariosUserDir``.
-	
+
 	:param scenariosDir: path of Mirage's scenarios directory
 	:type scenariosDir: str
 	:param scenariosUserDir: path of Mirage's user scenarios directory
@@ -42,7 +42,7 @@ def generateScenariosDictionary(scenariosDir, scenariosUserDir):
 	for scenario in os.listdir(scenariosDir):
 		if os.path.isfile(scenariosDir+"/"+scenario) and scenario[-3:] == ".py" and scenario != "__init__.py":
 			scenarios[scenario[:-3]]=imp.load_source(scenario[:-3],scenariosDir + "/"+scenario)
-		
+
 	for scenario in os.listdir(scenariosUserDir):
 		if os.path.isfile(scenariosUserDir+"/"+scenario) and scenario[-3:] == ".py" and scenario != "__init__.py":
 			scenarios[scenario[:-3]]=imp.load_source(scenario[:-3],scenariosUserDir + "/"+scenario)
@@ -59,16 +59,16 @@ def initializeHomeDir():
 				|_ modules (modules user directory)
 				|_ scenarios (scenarios user directory)
 				|_ mirage.cfg (configuration file)
-		
+
 	It returns the path of Mirage's home directory (e.g. "/home/user/.mirage")
-	
+
 	:return: path of Mirage's home directory
 	:rtype: str
 	'''
 	homeDir = expanduser("~")+"/.mirage"
 	if not exists(homeDir):
 		os.mkdir(homeDir)
-	
+
 	if not exists(homeDir+"/modules"):
 		os.mkdir(homeDir+"/modules")
 
@@ -78,16 +78,16 @@ def initializeHomeDir():
 	if not exists(homeDir+"/mirage.cfg"):
 		open(homeDir+"/mirage.cfg", 'a').close()
 	return homeDir
-	
+
 def getHomeDir():
 	'''
 	This function returns the path of the home directory.
-	
+
 	:return: path of the home directory
 	:rtype: str
-	
+
 	:Example:
-	
+
 	>>> print(utils.getHomeDir())
 
 	'''
@@ -98,12 +98,12 @@ def getHomeDir():
 def getTempDir():
 	'''
 	This function returns the path of the temporary directory.
-	
+
 	:return: path of the temporary directory
 	:rtype: str
-	
+
 	:Example:
-	
+
 	>>> print(utils.getTempDir())
 
 	'''
@@ -113,7 +113,7 @@ def getTempDir():
 def addTask(function, name='', args=[],kwargs={}):
 	'''
 	This function allows to quickly add a new background task.
-	
+
 	:param function: function to add as a background task
 	:type function: function
 	:param name: name of the background task
@@ -126,11 +126,11 @@ def addTask(function, name='', args=[],kwargs={}):
 	:rtype: str
 
 	:Example:
-	
+
 	>>> def f(name):
 	>>> 	print("Hello, "+name)
 	>>> fTask = utils.addTask(f,args=["user"])
-	
+
 	.. seealso::
 		core.taskManager.addTask
 
@@ -194,7 +194,7 @@ def stopTask(name):
 def stopAllTasks():
 	'''
 	This function allows to stop all the background tasks.
-	
+
 	:Example:
 
 	>>> utils.stopAllTasks()
@@ -209,14 +209,14 @@ def stopAllTasks():
 def loadModule(name):
 	'''
 	This function allows to load a module according to its name.
-	
+
 	:param name: name of the module to load
 	:type name: str
 	:return: instance of the loaded module
 	:rtype: core.module.Module
 
 	:Example:
-	
+
 	>>> module = utils.loadModule("ble_info")
 	>>> module["INTERFACE"] = "hci0"
 	>>> module.run()
@@ -235,7 +235,7 @@ def exitMirage():
 	'''
 	from mirage.core import app
 	app.App.Instance.exit()
-	sys.exit(1) 
+	sys.exit(1)
 
 def stopAllSubprocesses():
 	'''
@@ -247,7 +247,7 @@ def stopAllSubprocesses():
 def wait(seconds=1,minutes=0,hours=0):
 	'''
 	This function allows to wait for a given amount of time, provided by user.
-	
+
 	:param seconds: seconds to wait
 	:type seconds: float
 	:param minutes: minutes to wait
@@ -270,7 +270,7 @@ def now():
 def isRoot():
 	'''
 	This function checks if the framework has been launched as root.
-	
+
 	:return: boolean indicating if the framework has been launched as root
 	:rtype: bool
 	'''
@@ -279,7 +279,7 @@ def isRoot():
 def isNumber(theString):
 	'''
 	This function checks if the provided string is a number.
-	
+
 	:param theString: string to check
 	:type theString: str
 	:return: boolean indicating if the provided string is a number
@@ -290,7 +290,7 @@ def isNumber(theString):
 def isHexadecimal(theString):
 	'''
 	This function checks if the provided string is an hexadecimal number.
-	
+
 	:param theString: string to check
 	:type theString: str
 	:return: boolean indicating if the provided string is an hexadecimal number
@@ -302,7 +302,7 @@ def isHexadecimal(theString):
 def isPrintable(theString):
 	'''
 	This function checks if the provided string is composed of printable characters.
-	
+
 	:param theString: string to check
 	:type theString: str
 	:return: boolean indicating if the provided string is printable
@@ -314,7 +314,7 @@ def isPrintable(theString):
 def booleanArg(arg):
 	'''
 	This function converts the provided string into a boolean.
-	
+
 	:param arg: string to convert
 	:type arg: str
 	:return: corresponding boolean
@@ -337,7 +337,7 @@ def booleanArg(arg):
 def integerArg(arg):
 	'''
 	This function converts the provided string into an integer.
-	
+
 	:param arg: string to convert
 	:type arg: str
 	:return: corresponding integer
@@ -360,7 +360,7 @@ def integerArg(arg):
 def listArg(arg):
 	'''
 	This function converts the provided string into a list of strings (splitted by ",").
-	
+
 	:param arg: string to convert
 	:type arg: str
 	:return: corresponding list of strings
@@ -376,7 +376,7 @@ def listArg(arg):
 def addressArg(arg):
 	'''
 	This function converts the provided string into an address.
-	
+
 	:param arg: string to convert
 	:type arg: str
 	:return: corresponding address

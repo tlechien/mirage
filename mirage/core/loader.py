@@ -10,7 +10,9 @@ class Loader:
 		'''
 		import mirage.modules as modules
 		self.modulesList = {}
-		for moduleName,module in modules.__modules__.items():
+		modulesPath = next(iter(modules.__path__))
+		mList = modules.generateModulesDictionary(modulesPath, modulesPath)
+		for moduleName,module in mList.items():
 			current = module#__import__("modules."+module, fromlist=module)
 			moduleClass = getattr(current,moduleName)
 			self.modulesList[moduleName] = moduleClass
