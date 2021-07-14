@@ -255,7 +255,7 @@ class HCI_BD_Address(Packet):
 
 class HCI_Cmd_Read_Remote_Supported_Features(Packet):
     name = "Read Remote Supported Features"
-    fields_desc = [LEMACField("addr", None)]
+    fields_desc = [LEShortField("handle", 0)]
 
 
 class HCI_Cmd_Read_Remote_Extended_Features(Packet):
@@ -263,6 +263,20 @@ class HCI_Cmd_Read_Remote_Extended_Features(Packet):
     fields_desc = [
         LEShortField("handle", 0),
         ByteField("page_number", None)
+    ]
+
+
+class HCI_Cmd_Link_Key_Negative_Reply(Packet):
+    name = "Link Key Negative Reply"
+    fields_desc = [LEMACField("addr", None)]
+
+
+class HCI_Cmd_PIN_Code_Request_Reply(Packet):
+    name = "PIN Code Request Reply"
+    fields_desc = [
+        LEMACField("addr", None),
+        ByteField('PIN_code_lenght', None),
+        StrFixedLenField("PIN_code", b'\x00' * 16, 16)
     ]
 
 
@@ -299,14 +313,13 @@ class HCI_Evt_Link_Key_Notification(Packet):
     name = "Link Key Notification"
     fields_desc = [
         LEMACField('addr', None),
-        # I hope it's the right field for this? 16bytes
-        UUIDField('link_key', None),
+        StrFixedLenField("link_key", b'\x00' * 16, 16),
         ByteField('key_type', None)
     ]
 
 
-class HCI_Cmd_Pairing_Handle(Packet):
-    name = "Pairing handle for Authentication Requests"
+class HCI_Cmd_Authentication_Request(Packet):
+    name = "Authentication Request"
     fields_desc = [LEShortField("handle", 0)]
 
 
@@ -572,6 +585,7 @@ bind_layers(HCI_Command_Hdr, HCI_Cmd_Create_Connection,			opcode=0x0405)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Accept_Connection_Request,		opcode=0x0409)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Reject_Connection_Request,		opcode=0x040a)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Link_Key_Negative_Reply,		opcode=0x040c)
+bind_layers(HCI_Command_Hdr, HCI_Cmd_PIN_Code_Request_Reply,		opcode=0x040d)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Authentication_Request,		opcode=0x0411)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Remote_Name_Request,		opcode=0x0419)
 bind_layers(HCI_Command_Hdr,

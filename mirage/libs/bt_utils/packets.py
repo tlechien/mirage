@@ -719,26 +719,26 @@ class BluetoothPINCodeReply(BluetoothPacket):
     :type pin_code: int
     '''
 
-    def __init__(self, address="", pin_code=None):
+    def __init__(self, address="", pin_code=1234):
         super().__init__()
         self.address = address
         self.pin_code = pin_code
-        self.code_len = len(pin_code)
+        self.code_len = len(str(pin_code))
         self.name = "Bluetooth - PIN Code Reply Packet"
 
     def toString(self):
         return f"<< {self.name} | address={self.address} | PIN code={self.pin_code} | code lenth={self.code_len} >>"
 
 
-class BluetoothReadRSF(BluetoothPacket)
-  '''
+class BluetoothReadRSF(BluetoothPacket):
+    '''
     Mirage Bluetooth Packet - Read Remote Supported Features
 
     :param connectionHandle: integer indicating the connection handle
     :type connectionHandle: int
     '''
 
-   def __init__(self, connectionHandle=""):
+    def __init__(self, connectionHandle=-1):
         super().__init__()
         self.connectionHandle = connectionHandle
         self.name = "Bluetooth - Read Remote Supported Features"
@@ -747,15 +747,16 @@ class BluetoothReadRSF(BluetoothPacket)
         return f"<< {self.name} | handle={self.connectionHandle} >>"
 
 
-class BluetoothReadREF(BluetoothPacket)
-  '''
+class BluetoothReadREF(BluetoothPacket):
+    '''
     Mirage Bluetooth Packet - Read Remote Extended Features
 
     :param connectionHandle: integer indicating the connection handle
     :type connectionHandle: int
+    :param pageNumber: integer indication the amount of pages.
     '''
 
-   def __init__(self, connectionHandle="", pageNumber=1):
+    def __init__(self, connectionHandle=-1, pageNumber=1):
         super().__init__()
         self.connectionHandle = connectionHandle
         self.pageNumber = pageNumber

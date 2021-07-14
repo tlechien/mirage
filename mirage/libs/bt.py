@@ -590,25 +590,27 @@ class BluetoothEmitter(wireless.Emitter):
         elif isinstance(p, BluetoothPairing):
             handle = p.connectionHandle if p.connectionHandle != - \
                 1 else self.device.getCurrentHandle()
-            p.packet = HCI_Hdr()/HCI_Command_Hdr(opcode=0x0411, len=2) / \
-                HCI_Cmd_Pairing_Handle(handle=handle)
+            p.packet = HCI_Hdr()/HCI_Command_Hdr()/HCI_Cmd_Authentication_Request(handle=handle)
         elif isinstance(p, BluetoothLinkKeyReply):
             if p.link_key:
                 p.packet = HCI_Hdr()/HCI_Command_Hdr()  # /TODO
             else:
-                p.packet = HCI_Hdr()/HCI_Command_Hdr(opcode=0x040c, len=6) / \
-                    HCI_BD_Address(addr=p.address)
+                p.packet = HCI_Hdr()/HCI_Command_Hdr() / \
+                    HCI_Cmd_Link_Key_Negative_Reply(addr=p.address)
         elif isinstance(p, BluetoothReadRSF):
             handle = p.connectionHandle if p.connectionHandle != - \
                 1 else self.device.getCurrentHandle()
-            p.packet = HCI_Hdr()/HCI_Command_Hdr(opcode=0x041b, len=2) / \
-                HCI_Connection_Handle(handle=handle)
+            p.packet = HCI_Hdr()/HCI_Command_Hdr() / \
+                HCI_Cmd_Read_Remote_Supported_Features(handle=handle)
         elif isinstance(p, BluetoothReadREF):
             handle = p.connectionHandle if p.connectionHandle != - \
                 1 else self.device.getCurrentHandle()
-            p.packet = HCI_Hdr()/HCI_Command_Hdr(opcode=0x041b, len=2)/HCI_Comma
+            p.packet = HCI_Hdr()/HCI_Command_Hdr() / \
+                HCI_Cmd_Read_Remote_Extended_Features(
+                    handle=handle, page_number=p.pageNumber)
         elif isinstance(p, BluetoothPINCodeReply):
-
+            p.packet = HCI_Hdr()/HCI_Command_Hdr()/HCI_Cmd_PIN_Code_Request_Reply(addr=p.address,
+                                                                                  PIN_code_lenght=p.code_len, PIN_code=bytes([ord(i) for i in str(p.pin_code)]))
         return p.packet
 
 
@@ -680,6 +682,8 @@ class BluetoothReceiver(wireless.Receiver):
                 return BluetoothAuthenticationComplete(status=packet.status, connectionHandle=packet.handle)
             elif HCI_Event_Disconnection_Complete in packet:
                 return BluetoothDisconnectionComplete(status=packet.status, connectionHandle=packet.handle, reason=packet.reason)
+            elif HCI_Evt_PIN_Code_Request in packet:
+                return BluetoothPINCodeRequest(address=packet.addr)
             return new
 
 
