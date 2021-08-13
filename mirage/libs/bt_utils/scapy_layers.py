@@ -213,17 +213,20 @@ class HCI_Evt_IO_Capability_Request(Packet):
     fields_desc = [LEMACField("addr", None)]
 
 
+io_capability = {
+    0x00: "DisplayOnly",
+    0x01: "DisplayYesNo",
+    0x02: "KeyboardOnly",
+    0x03: "NoInputNoOutput",
+    0x04: "KeyboardDisplay"
+}
+
+
 class HCI_Evt_IO_Capability_Response(Packet):
     name = "IO Capability Response"
     fields_desc = [
         LEMACField('addr', None),
-        ByteEnumField("io_capability", 0x00, {
-            0x00: "DisplayOnly",
-            0x01: "DisplayYesNo",
-            0x02: "KeyboardDisplay",
-            0x03: "KeyboardOnly",
-            0x04: "NoInputNoOutput"
-        }),
+        ByteEnumField("io_capability", 0x00, io_capability),
         ByteEnumField("oob_data_present", 0x00, {0x00: "no", 0x01: "yes"}),
         ByteEnumField("mitm_protection_required", 0x00, {
                       0x00: "no", 0x01: "yes", 0x03: "no_secure_connection"}),
@@ -240,6 +243,11 @@ class HCI_Evt_User_Confirmation_Request(Packet):
 
 class HCI_Evt_PIN_Code_Request(Packet):
     name = "PIN Code Request"
+    fields_desc = [LEMACField("addr", None)]
+
+
+class HCI_Evt_Passkey_Request(Packet):
+    name = "Passkey Request"
     fields_desc = [LEMACField("addr", None)]
 
 
@@ -323,10 +331,43 @@ class HCI_Cmd_Authentication_Request(Packet):
     fields_desc = [LEShortField("handle", 0)]
 
 
+class HCI_Cmd_Write_Simple_Pairing_Mode(Packet):
+    name = "Simple Pairing Mode"
+    fields_desc = [ByteEnumField("mode", 0x00, {
+        0x00: "Disabled",
+        0x01: "Enabled"})
+    ]
+
+
+class HCI_Cmd_IO_Capability_Request_Reply(Packet):
+    name = "IO Capability Request Reply"
+    fields_desc = [
+        LEMACField('addr', None),
+        ByteEnumField("io_capability", 0x00, io_capability),
+        ByteEnumField("oob_data_present", 0x00, {0x00: "no", 0x01: "yes"}),
+        ByteEnumField("mitm_protection_required", 0x00, {
+                      0x00: "no", 0x01: "yes", 0x03: "no_secure_connection"})
+    ]
+
+
+class HCI_Cmd_User_Confirmation_Request_Reply(Packet):
+    name = "User Confirmation Request Reply"
+    fields_desc = [LEMACField('addr', None)]
+
+
+class HCI_Cmd_Passkey_Request_Reply(Packet):
+    name = "Passkey Request Reply"
+    fields_desc = [
+        LEMACField('addr', None),
+        StrFixedLenField("passkey", b'\x00' * 4, 4)
+    ]
+
+##
+
+
 class Data_Element_Hdr(Packet):
     name = "Data Element Header"
     fields_desc = [
-
         BitEnumField('type', 0, 5, {	0: "nil",
                                      1: "unsigned_integer",
                                      2: "signed_twocomp_integer",
@@ -355,7 +396,6 @@ class Data_Element_Hdr(Packet):
                          None), lambda pkt: pkt.size == 6),
         ConditionalField(IntField("additional_32_bits_size",
                          None), lambda pkt: pkt.size == 7),
-
 
     ]
 
@@ -592,20 +632,28 @@ bind_layers(HCI_Command_Hdr,
             HCI_Cmd_Read_Remote_Supported_Features,	opcode=0x041b)
 bind_layers(HCI_Command_Hdr,
             HCI_Cmd_Read_Remote_Extended_Features,	opcode=0x041c)
+bind_layers(HCI_Command_Hdr, HCI_Cmd_IO_Capability_Request_Reply,
+            opcode=0x042b)
+bind_layers(HCI_Command_Hdr, HCI_Cmd_User_Confirmation_Request_Reply,
+            opcode=0x042c)
+bind_layers(HCI_Command_Hdr, HCI_Cmd_Passkey_Request_Reply,
+            opcode=0x042e)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Write_Local_Name,			opcode=0x0c13)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Read_Local_Name,			opcode=0x0c14)
 bind_layers(HCI_Command_Hdr, HCI_Cmd_Write_Scan_Enable, 	    	opcode=0x0c1a)
+bind_layers(HCI_Command_Hdr, HCI_Cmd_Write_Inquiry_Mode,    		opcode=0x0c45)
 bind_layers(HCI_Command_Hdr,
             HCI_Cmd_Write_Extended_Inquiry_Response,	                opcode=0x0c52)
-bind_layers(HCI_Command_Hdr, HCI_Cmd_Write_Inquiry_Mode,    		opcode=0x0c45)
+bind_layers(HCI_Command_Hdr,
+            HCI_Cmd_Write_Simple_Pairing_Mode,    		        opcode=0x0c56)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Inquiry_Complete,			code=0x01)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Inquiry_Result,			code=0x02)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Connection_Complete,		code=0x03)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Connection_Request,			code=0x04)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Authentication_Complete,		code=0x06)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Remote_Name_Request_Complete,       code=0x07)
-#bind_layers(HCI_Event_Hdr,  HCI_Evt_Request_Complete,           	code=0x0e)
-#bind_layers(HCI_Event_Hdr,  HCI_Evt_Authentication_Request,		code=0x0f)
+# bind_layers(HCI_Event_Hdr,  HCI_Evt_Request_Complete,           	code=0x0e)
+# bind_layers(HCI_Event_Hdr,  HCI_Evt_Authentication_Request,		code=0x0f)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_PIN_Code_Request,			code=0x16)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Link_Key_Request,			code=0x17)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_Link_Key_Notification,		code=0x18)
@@ -616,6 +664,7 @@ bind_layers(HCI_Event_Hdr,  HCI_Evt_Extended_Inquiry_Result,		code=0x2f)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_IO_Capability_Request,		code=0x31)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_IO_Capability_Response,		code=0x32)
 bind_layers(HCI_Event_Hdr,  HCI_Evt_User_Confirmation_Request,		code=0x33)
+bind_layers(HCI_Event_Hdr,  HCI_Evt_Passkey_Request,    		code=0x34)
 bind_layers(HCI_Event_Command_Complete,
             HCI_Cmd_Complete_Read_Local_Name, opcode=0x0c14)
 

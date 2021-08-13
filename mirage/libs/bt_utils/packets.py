@@ -608,22 +608,78 @@ class BluetoothLinkKeyRequest(BluetoothPacket):
 
 class BluetoothUserConfirmationRequest(BluetoothPacket):
     '''
-    Mirage Bluetooth Packet - Link Key Request
+    Mirage Bluetooth Packet - User Confirmation Request
 
     :param address: string indicating the target BD address (format : "XX:XX:XX:XX:XX:XX")
     :type address: str
     :param value: value for the pairing confirmation.
-    :type value: int
+    :type value: str
     '''
 
-    def __init__(self, address="", value=None):
+    def __init__(self, address="", value=""):
         super().__init__()
         self.address = address
         self.value = value
-        self.name = "Bluetooth - Link Key Request Packet"
+        self.name = "Bluetooth - User Confirmation Request Packet"
 
     def toString(self):
         return f"<< {self.name} | address={self.address} | numeric value={self.value} >>"
+
+
+class BluetoothUserConfirmationReply(BluetoothPacket):
+    '''
+    Mirage Bluetooth Packet - User Confirmation Request Reply
+
+    :param address: string indicating the target BD address (format : "XX:XX:XX:XX:XX:XX")
+    :type address: str
+    :param value: value for the pairing confirmation.
+    :type value: str
+    '''
+
+    def __init__(self, address=""):
+        super().__init__()
+        self.address = address
+        self.name = "Bluetooth - User Confirmation Request Reply Packet"
+
+    def toString(self):
+        return f"<< {self.name} | address={self.address} >>"
+
+
+class BluetoothPasskeyRequest(BluetoothPacket):
+    '''
+    Mirage Bluetooth Packet - Passkey Request
+
+    :param address: string indicating the target BD address (format : "XX:XX:XX:XX:XX:XX")
+    :type address: str
+    '''
+
+    def __init__(self, address=""):
+        super().__init__()
+        self.address = address
+        self.name = "Bluetooth - Passkey Request Packet"
+
+    def toString(self):
+        return f"<< {self.name} | address={self.address} >>"
+
+
+class BluetoothPasskeyReply(BluetoothPacket):
+    '''
+    Mirage Bluetooth Packet - Passkey Request Reply
+
+    :param address: string indicating the target BD address (format : "XX:XX:XX:XX:XX:XX")
+    :type address: str
+    :param passkey: value for the pairing confirmation.
+    :type passkey: str
+    '''
+
+    def __init__(self, address="", passkey=""):
+        super().__init__()
+        self.address = address
+        self.passkey = passkey
+        self.name = "Bluetooth - Passkey Request Reply Packet"
+
+    def toString(self):
+        return f"<< {self.name} | address={self.address} | Passkey={self.passkey} >>"
 
 
 class BluetoothLinkKeyReply(BluetoothPacket):
@@ -632,7 +688,7 @@ class BluetoothLinkKeyReply(BluetoothPacket):
 
     :param address: string indicating the target BD address (format : "XX:XX:XX:XX:XX:XX")
     :type address: str
-    :param link_key: string indicating the Link Key established in a previous pairing.
+    :param link_key: string indicating the Link Key established in a previous pairing
     :type link_key: str
     '''
 
@@ -753,7 +809,8 @@ class BluetoothReadREF(BluetoothPacket):
 
     :param connectionHandle: integer indicating the connection handle
     :type connectionHandle: int
-    :param pageNumber: integer indication the amount of pages.
+    :param pageNumber: integer indication the amount of pages
+    :type pageNumber: int
     '''
 
     def __init__(self, connectionHandle=-1, pageNumber=1):
@@ -764,3 +821,40 @@ class BluetoothReadREF(BluetoothPacket):
 
     def toString(self):
         return f"<< {self.name} | pageNumber={self.pageNumber} | handle={self.connectionHandle} >>"
+
+
+class BluetoothSimplePairingMode(BluetoothPacket):
+    '''
+    Mirage Bluetooth Packet - Write Simple Pairing Mode
+
+    :param mode: integer indicating state of the pairing mode
+    :type mode: int
+    '''
+
+    def __init__(self, mode=0):
+        super().__init__()
+        self.mode = mode
+        self.name = "Bluetooth - Write Simple Pairing Mode"
+
+    def toString(self):
+        return f"<< {self.name} | mode={self.mode} >>"
+
+
+class BluetoothIOCapabilityReply(BluetoothPacket):
+    '''
+    Mirage Bluetooth Packet - IO Capability Request Reply
+
+    :param address: string indicating the target BD address (format : "XX:XX:XX:XX:XX:XX")
+    :type address: str
+    '''
+
+    def __init__(self, address="", IOCapability="", OOBDataPresent=0, AuthenticationRequirements=0x00):
+        super().__init__()
+        self.address = address
+        self.IOCapability = IOCapability
+        self.OOBDataPresent = OOBDataPresent
+        self.AuthenticationRequirements = AuthenticationRequirements
+        self.name = "Bluetooth - IO Capability Request Reply Packet"
+
+    def toString(self):
+        return f"<< {self.name} | address={self.address} | IO Capabilty={self.IOCapability} | OOB Data Present={self.OOBDataPresent} | Athentification Requirements={self.AuthenticationRequirements} >>"
